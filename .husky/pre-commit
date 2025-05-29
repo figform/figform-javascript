@@ -1,0 +1,4 @@
+npm run build:dry
+npm run lint
+# TODO: Uncomment once tests are in place
+# npm run test -- --runInBand

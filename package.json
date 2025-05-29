@@ -1,0 +1,65 @@
+{
+  "name": "figform",
+  "version": "0.0.1",
+  "description": "Official FigForm SDK for JavaScript",
+  "author": "FigForm",
+  "homepage": "https://github.com/figform/figform-javascript",
+  "keywords": [
+    "react",
+    "javascript",
+    "api",
+    "node",
+    "typescript",
+    "sdk",
+    "vue",
+    "nextjs",
+    "javascript-client",
+    "figform",
+    "figform-client"
+  ],
+  "license": "MIT",
+  "main": "build/index.js",
+  "repository": "github:figform/figform-javascript",
+  "types": "build/index.d.ts",
+  "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "@total-typescript/ts-reset": "^0.6.1",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/react": "^19.1.6",
+    "eslint": "^9.27.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "husky": "^9.1.7",
+    "jiti": "^2.4.2",
+    "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "prettier": {
+    "importOrder": [
+      "<THIRD_PARTY_MODULES>",
+      "^[./]"
+    ],
+    "importOrderGroupNamespaceSpecifiers": true,
+    "importOrderSideEffects": false,
+    "importOrderSortSpecifiers": true,
+    "printWidth": 120,
+    "plugins": [
+      "@trivago/prettier-plugin-sort-imports"
+    ]
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:dry": "tsc --incremental false --noEmit",
+    "clean": "rimraf build coverage",
+    "format": "eslint . --fix",
+    "lint": "eslint .",
+    "prepare": "husky",
+    "test": "exit 0"
+  }
+}
