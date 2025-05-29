@@ -5,7 +5,8 @@
   "preset": "ts-jest",
   "testEnvironment": "jsdom",
   "testPathIgnorePatterns": [
-    "<rootDir>/build/"
+    "<rootDir>/build/",
+    "<rootDir>/dist/"
   ],
   "transform": {
     "^.+\\.tsx?$": "ts-jest"

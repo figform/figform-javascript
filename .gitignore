@@ -3,8 +3,8 @@ logs/
 *.log
 npm-debug.log*
 
-# Build directory
-build/
+# Distribution directory
+dist/
 
 # Coverage directory used by tools like istanbul
 coverage/
