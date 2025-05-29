@@ -11,6 +11,9 @@ concurrency:
   cancel-in-progress: true
   group: main-${{ github.event.pull_request.number || github.sha }}
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
