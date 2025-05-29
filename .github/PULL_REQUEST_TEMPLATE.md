@@ -1,0 +1,3 @@
+- [ ] Ensure the build is still passing with `npm run build:dry`
+- [ ] Ensure new code lints with `npm run lint`
+- [ ] Ensure new tests are passing with `npm run test`

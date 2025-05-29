@@ -1,0 +1,26 @@
+name: Feature Request
+description: Got an awesome idea? We're all ears!
+labels: [enhancement]
+
+body:
+  - type: markdown
+    attributes:
+      value: Hey there! Thanks for taking the time to share your ideas with us. We love hearing what could make things even better!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's the challenge you're facing?
+      placeholder: |-
+        Right now I'm struggling with... and it would be amazing if I could...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What's your vision for the solution?
+      placeholder: |-
+        I'm thinking it could work like... or maybe we could add...
+    validations:
+      required: true

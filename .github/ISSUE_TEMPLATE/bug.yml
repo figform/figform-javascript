@@ -1,0 +1,48 @@
+name: Bug Report
+description: Found something broken? Help us squash it!
+labels: [bug]
+
+body:
+  - type: checkboxes
+    attributes:
+      label: Quick checklist before we dive in
+      options:
+        - label: I've searched through existing issues to make sure this isn't a duplicate
+          required: true
+        - label: I've checked the docs to see if I missed something obvious
+          required: true
+        - label: I'm using the latest version available
+          required: true
+
+  - type: input
+    id: sdk-version
+    attributes:
+      label: Which version are you running?
+      placeholder: e.g., 2.1.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How can we reproduce this?
+      placeholder: |-
+        1. I did this...
+        2. Then this happened...
+        3. And finally...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What actually happened?
+    validations:
+      required: true
