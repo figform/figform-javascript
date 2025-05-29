@@ -1,6 +1,7 @@
 import { resolveOptions } from "../src/options";
 
 const mockGetElementById = jest.fn<ReturnType<Document["getElementById"]>, Parameters<Document["getElementById"]>>();
+const mockDocumentBody = document.createElement("body");
 
 Object.defineProperty(document, "getElementById", {
   writable: true,
@@ -10,7 +11,7 @@ Object.defineProperty(document, "getElementById", {
 Object.defineProperty(document, "body", {
   writable: true,
   configurable: true,
-  value: {},
+  value: mockDocumentBody,
 });
 
 describe("options", () => {
@@ -24,7 +25,7 @@ describe("options", () => {
 
       expect(result).toEqual({
         baseUrl: "https://figform.com",
-        parent: document.body,
+        parent: mockDocumentBody,
       });
     });
 
@@ -35,7 +36,7 @@ describe("options", () => {
 
       expect(result).toEqual({
         baseUrl: "https://custom.example.com",
-        parent: document.body,
+        parent: mockDocumentBody,
       });
     });
 
@@ -62,6 +63,17 @@ describe("options", () => {
       });
       expect(mockGetElementById).toHaveBeenCalledTimes(1);
       expect(mockGetElementById).toHaveBeenCalledWith(options.parentId);
+    });
+
+    it("should prefer fallback over document.body", () => {
+      const fallbackParent = {} as HTMLElement;
+      const result = resolveOptions(undefined, fallbackParent);
+
+      expect(result).toEqual({
+        baseUrl: "https://figform.com",
+        parent: fallbackParent,
+      });
+      expect(mockGetElementById).not.toHaveBeenCalled();
     });
 
     it("should prefer parent over parentId when both are provided", () => {

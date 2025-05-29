@@ -1,25 +1,36 @@
 import * as React from "react";
-import { FormOptions, resolveOptions } from "./options";
+import { FigFormOptions, resolveOptions } from "./options";
 import { createScript, existsScript, unmountScript } from "./script";
 
-export interface FigFormProps extends FormOptions {
+export interface FigFormProps extends FigFormOptions {
   id: string;
 }
 
 export function FigForm({ id, ...options }: Readonly<FigFormProps>): React.ReactNode {
-  const { baseUrl, parent } = React.useMemo(() => resolveOptions(options), [options]);
+  const mountRef = React.useRef<HTMLSpanElement>(null);
+  const parentRef = React.useRef<HTMLElement | null>(null);
+
+  React.useLayoutEffect(() => {
+    if (mountRef.current !== null && mountRef.current.parentElement !== null) {
+      parentRef.current = mountRef.current.parentElement;
+      mountRef.current.remove();
+    }
+  }, []);
 
   React.useEffect(() => {
-    const url = `${baseUrl}/f/${id}`;
+    const resolvedOptions = resolveOptions(options, parentRef.current);
+    const url = `${resolvedOptions.baseUrl}/f/${id}`;
 
     if (!existsScript(id, url)) {
-      createScript(url, parent);
+      createScript(url, resolvedOptions.parent);
     }
 
     return () => {
       unmountScript(url);
     };
-  }, [baseUrl, id, parent]);
+  }, [id, options]);
 
-  return null;
+  return <span id={`figform-${id}`} ref={mountRef} style={{ display: "none" }} />;
 }
+
+export type { FigFormOptions };

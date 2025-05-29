@@ -65,7 +65,7 @@ describe("script", () => {
       expect(result).toBe(true);
       expect(mockQuerySelector).toHaveBeenCalledTimes(2);
       expect(mockQuerySelector).toHaveBeenNthCalledWith(1, `script[src="${mockScript.src}"]`);
-      expect(mockQuerySelector).toHaveBeenNthCalledWith(2, `div[class*="figform_${id}_"] div[class^="figform_${id}_"]`);
+      expect(mockQuerySelector).toHaveBeenNthCalledWith(2, `div[class*="figform_${id}_"][class^="figform_${id}_"]`);
     });
 
     it("should return false when neither script nor div exists", () => {
@@ -78,7 +78,7 @@ describe("script", () => {
       expect(result).toBe(false);
       expect(mockQuerySelector).toHaveBeenCalledTimes(2);
       expect(mockQuerySelector).toHaveBeenNthCalledWith(1, `script[src="${mockScript.src}"]`);
-      expect(mockQuerySelector).toHaveBeenNthCalledWith(2, `div[class*="figform_${id}_"] div[class^="figform_${id}_"]`);
+      expect(mockQuerySelector).toHaveBeenNthCalledWith(2, `div[class*="figform_${id}_"][class^="figform_${id}_"]`);
     });
   });
 

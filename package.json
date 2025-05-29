@@ -50,6 +50,18 @@
   "engines": {
     "node": ">=18"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react.js",
+      "require": "./dist/react.js",
+      "types": "./dist/react.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -66,9 +78,18 @@
       "@trivago/prettier-plugin-sort-imports"
     ]
   },
+  "peerDependencies": {
+    "react": "18.x || 19.x"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
   "scripts": {
     "build": "tsc",
     "build:dry": "tsc --noEmit",
+    "build:watch": "tsc --watch",
     "clean": "rimraf build coverage",
     "format": "eslint . --fix",
     "lint": "eslint .",

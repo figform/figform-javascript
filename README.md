@@ -10,10 +10,22 @@ npm install figform
 
 ## Usage
 
+### JavaScript / TypeScript
+
 ```ts
 import { FigForm } from "figform";
 
 FigForm.form("id", {
   parentId: "parent",
 });
+```
+
+### React
+
+```tsx
+import { FigForm } from "figform/react";
+
+function MyForm() {
+  return <FigForm id="your-form-id" parentId="parent" />;
+}
 ```

@@ -4,21 +4,25 @@ import * as optionsModule from "../src/options";
 import * as scriptModule from "../src/script";
 import { FigForm, FigFormProps } from "../src/react";
 
-jest.mock("../src/options");
-jest.mock("../src/script");
+const mockResolveOptions = jest.spyOn(optionsModule, "resolveOptions");
+const mockCreateScript = jest.spyOn(scriptModule, "createScript");
+const mockExistsScript = jest.spyOn(scriptModule, "existsScript");
+const mockUnmountScript = jest.spyOn(scriptModule, "unmountScript");
 
-const mockResolveOptions = jest.mocked(optionsModule.resolveOptions);
-const mockCreateScript = jest.mocked(scriptModule.createScript);
-const mockExistsScript = jest.mocked(scriptModule.existsScript);
-const mockUnmountScript = jest.mocked(scriptModule.unmountScript);
+const mockSpanRemove = jest.fn<ReturnType<HTMLSpanElement["remove"]>, Parameters<HTMLSpanElement["remove"]>>();
+
+Object.defineProperty(HTMLSpanElement.prototype, "remove", {
+  value: mockSpanRemove,
+  writable: true,
+});
 
 describe("react.tsx", () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
-    mockResolveOptions.mockImplementation((options) => ({
+    mockResolveOptions.mockImplementation((options, fallback) => ({
       baseUrl: options?.baseUrl ?? "https://figform.com",
-      parent: document.createElement("div"),
+      parent: fallback ?? document.createElement("div"),
     }));
 
     mockCreateScript.mockImplementation(() => document.createElement("script"));
@@ -33,16 +37,17 @@ describe("react.tsx", () => {
   });
 
   describe("FigForm", () => {
-    it("should render without crashing and return null", () => {
+    it("should render span element and call remove when it has a parent", () => {
       const props: FigFormProps = {
         id: "test-form",
       };
 
-      const { container } = render(<FigForm {...props} />);
-      expect(container.children.length).toBe(0);
+      render(<FigForm {...props} />);
+
+      expect(mockSpanRemove).toHaveBeenCalledTimes(1);
     });
 
-    it("should resolve options using provided options", () => {
+    it("should call resolveOptions with parent element from RTL container", () => {
       const mockParent = document.createElement("div");
       const options = {
         baseUrl: "https://custom.example.com",
@@ -52,6 +57,7 @@ describe("react.tsx", () => {
         id: "test-form",
         ...options,
       };
+
       mockResolveOptions.mockReturnValueOnce({
         baseUrl: "https://custom.example.com",
         parent: mockParent,
@@ -60,7 +66,7 @@ describe("react.tsx", () => {
       render(<FigForm {...props} />);
 
       expect(mockResolveOptions).toHaveBeenCalledTimes(1);
-      expect(mockResolveOptions).toHaveBeenCalledWith(options);
+      expect(mockResolveOptions).toHaveBeenCalledWith(options, expect.any(HTMLElement));
     });
 
     it("should resolve options using empty options when only id is provided", () => {
@@ -71,7 +77,7 @@ describe("react.tsx", () => {
       render(<FigForm {...props} />);
 
       expect(mockResolveOptions).toHaveBeenCalledTimes(1);
-      expect(mockResolveOptions).toHaveBeenCalledWith({});
+      expect(mockResolveOptions).toHaveBeenCalledWith({}, expect.any(HTMLElement));
     });
 
     it("should create script when script does not exist", () => {
@@ -196,21 +202,23 @@ describe("react.tsx", () => {
         id: "change-test",
       };
 
-      const { rerender } = render(<FigForm {...props1} />);
+      const ParentComponent = ({ formProps }: { formProps: FigFormProps }) => <FigForm {...formProps} />;
+
+      const { rerender } = render(<ParentComponent formProps={props1} />);
 
       const props2: FigFormProps = {
         id: "change-test",
         baseUrl: "https://custom.figform.com",
       };
 
-      rerender(<FigForm {...props2} />);
+      rerender(<ParentComponent formProps={props2} />);
 
       expect(mockResolveOptions).toHaveBeenCalledTimes(2);
-      expect(mockResolveOptions).toHaveBeenNthCalledWith(1, {});
-      expect(mockResolveOptions).toHaveBeenNthCalledWith(2, { baseUrl: props2.baseUrl });
+      expect(mockResolveOptions).toHaveBeenNthCalledWith(1, {}, expect.any(HTMLElement));
+      expect(mockResolveOptions).toHaveBeenNthCalledWith(2, { baseUrl: props2.baseUrl }, expect.any(HTMLElement));
     });
 
-    it("should handle all FormOptions properties", () => {
+    it("should handle all FigFormOptions properties", () => {
       const mockParent = document.createElement("div");
       const resolvedOptions = {
         baseUrl: "https://custom.figform.com",
@@ -219,21 +227,25 @@ describe("react.tsx", () => {
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
       mockExistsScript.mockReturnValueOnce(false);
 
+      const customParentElement = document.createElement("section");
       const props: FigFormProps = {
         id: "full-options-test",
         baseUrl: "https://custom.figform.com",
-        parent: mockParent,
+        parent: customParentElement,
         parentId: "should-be-ignored-when-parent-provided",
       };
 
       render(<FigForm {...props} />);
 
       expect(mockResolveOptions).toHaveBeenCalledTimes(1);
-      expect(mockResolveOptions).toHaveBeenCalledWith({
-        baseUrl: props.baseUrl,
-        parent: mockParent,
-        parentId: props.parentId,
-      });
+      expect(mockResolveOptions).toHaveBeenCalledWith(
+        {
+          baseUrl: props.baseUrl,
+          parent: customParentElement,
+          parentId: props.parentId,
+        },
+        expect.any(HTMLElement),
+      );
       expect(mockExistsScript).toHaveBeenCalledTimes(1);
       expect(mockExistsScript).toHaveBeenCalledWith(props.id, `${props.baseUrl}/f/${props.id}`);
       expect(mockCreateScript).toHaveBeenCalledTimes(1);
@@ -257,7 +269,7 @@ describe("react.tsx", () => {
       render(<FigForm {...props} />);
 
       expect(mockResolveOptions).toHaveBeenCalledTimes(1);
-      expect(mockResolveOptions).toHaveBeenCalledWith({ parentId: props.parentId });
+      expect(mockResolveOptions).toHaveBeenCalledWith({ parentId: props.parentId }, expect.any(HTMLElement));
       expect(mockCreateScript).toHaveBeenCalledTimes(1);
       expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.com/f/${props.id}`, mockParent);
     });
@@ -279,9 +291,41 @@ describe("react.tsx", () => {
       render(<FigForm {...props} />);
 
       expect(mockResolveOptions).toHaveBeenCalledTimes(1);
-      expect(mockResolveOptions).toHaveBeenCalledWith({ parent: customParent });
+      expect(mockResolveOptions).toHaveBeenCalledWith({ parent: customParent }, expect.any(HTMLElement));
       expect(mockCreateScript).toHaveBeenCalledTimes(1);
       expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.com/f/${props.id}`, customParent);
+    });
+
+    it("should handle changes to id prop", () => {
+      const mockParent = document.createElement("div");
+      mockResolveOptions.mockReturnValue({
+        baseUrl: "https://figform.com",
+        parent: mockParent,
+      });
+      mockExistsScript.mockReturnValue(false);
+
+      const TestComponent = ({ id }: { id: string }) => <FigForm id={id} />;
+
+      const { rerender } = render(<TestComponent id="initial-id" />);
+
+      expect(mockExistsScript).toHaveBeenCalledWith("initial-id", "https://figform.com/f/initial-id");
+
+      rerender(<TestComponent id="changed-id" />);
+
+      expect(mockExistsScript).toHaveBeenCalledWith("changed-id", "https://figform.com/f/changed-id");
+      expect(mockExistsScript).toHaveBeenCalledTimes(2);
+    });
+
+    it("should handle useLayoutEffect behavior", () => {
+      const props: FigFormProps = {
+        id: "layout-effect-test",
+      };
+
+      render(<FigForm {...props} />);
+
+      expect(mockSpanRemove).toHaveBeenCalledTimes(1);
+      expect(mockResolveOptions).toHaveBeenCalledTimes(1);
+      expect(mockResolveOptions).toHaveBeenCalledWith({}, expect.any(HTMLElement));
     });
   });
 });

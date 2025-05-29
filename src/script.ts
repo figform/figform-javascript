@@ -10,7 +10,7 @@ export function existsScript(id: string, src: string): boolean {
 
   return (
     document.querySelector(`script[src="${src}"]`) !== null ||
-    document.querySelector(`div[class*="${className}"] div[class^="${className}"]`) !== null
+    document.querySelector(`div[class*="${className}"][class^="${className}"]`) !== null
   );
 }
 

@@ -1,4 +1,4 @@
-export interface FormOptions {
+export interface FigFormOptions {
   baseUrl?: string;
   parent?: HTMLElement;
   parentId?: string;
@@ -9,7 +9,7 @@ interface ResolvedFormOptions {
   parent: HTMLElement;
 }
 
-function resolveParent(options: FormOptions | undefined): HTMLElement {
+function resolveParent(options: FigFormOptions | undefined, fallback: HTMLElement | null): HTMLElement {
   if (typeof options?.parent !== "undefined") {
     return options.parent;
   }
@@ -24,12 +24,15 @@ function resolveParent(options: FormOptions | undefined): HTMLElement {
     return parentElement;
   }
 
-  return document.body;
+  return fallback ?? document.body;
 }
 
-export function resolveOptions(options: FormOptions | undefined): ResolvedFormOptions {
+export function resolveOptions(
+  options: FigFormOptions | undefined,
+  fallback: HTMLElement | null = null,
+): ResolvedFormOptions {
   return {
     baseUrl: options?.baseUrl ?? "https://figform.com",
-    parent: resolveParent(options),
+    parent: resolveParent(options, fallback),
   };
 }
