@@ -5,14 +5,12 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   globalIgnores(["build/**/*", "coverage/**/*"]),
-  eslint.configs.all,
+  eslint.configs.recommended,
   tseslint.configs.strict,
   tseslint.configs.stylistic,
   {
     rules: {
-      "func-style": "off",
       "no-duplicate-imports": "error",
-      "sort-imports": "off",
     },
   },
   prettierRecommended,

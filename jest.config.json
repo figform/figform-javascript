@@ -1,0 +1,13 @@
+{
+  "collectCoverageFrom": [
+    "<rootDir>/src/**/*.{ts,tsx}"
+  ],
+  "preset": "ts-jest",
+  "testEnvironment": "jsdom",
+  "testPathIgnorePatterns": [
+    "<rootDir>/build/"
+  ],
+  "transform": {
+    "^.+\\.tsx?$": "ts-jest"
+  }
+}
