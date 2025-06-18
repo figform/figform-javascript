@@ -1,6 +1,6 @@
 # Official FigForm SDK for JavaScript
 
-Feel the power of Figma when creating customized forms and surveys for free.
+[FigForm](https://figform.io) is a full-featured form builder with Figma-like editor, analytics, integrations, and developer-friendly SDKs for React and JS.
 
 ## Installation
 
