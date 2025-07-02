@@ -21,7 +21,7 @@ describe("react.tsx", () => {
     jest.resetAllMocks();
 
     mockResolveOptions.mockImplementation((options, fallback) => ({
-      baseUrl: options?.baseUrl ?? "https://figform.com",
+      baseUrl: options?.baseUrl ?? "https://figform.io",
       parent: fallback ?? document.createElement("div"),
     }));
 
@@ -83,7 +83,7 @@ describe("react.tsx", () => {
     it("should create script when script does not exist", () => {
       const mockParent = document.createElement("div");
       const resolvedOptions = {
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: mockParent,
       };
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -96,15 +96,15 @@ describe("react.tsx", () => {
       render(<FigForm {...props} />);
 
       expect(mockExistsScript).toHaveBeenCalledTimes(1);
-      expect(mockExistsScript).toHaveBeenCalledWith("test-form", `https://figform.com/f/${props.id}`);
+      expect(mockExistsScript).toHaveBeenCalledWith("test-form", `https://figform.io/f/${props.id}`);
       expect(mockCreateScript).toHaveBeenCalledTimes(1);
-      expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.com/f/${props.id}`, mockParent);
+      expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.io/f/${props.id}`, mockParent);
     });
 
     it("should not create script when script already exists", () => {
       const mockParent = document.createElement("div");
       const resolvedOptions = {
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: mockParent,
       };
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -117,14 +117,14 @@ describe("react.tsx", () => {
       render(<FigForm {...props} />);
 
       expect(mockExistsScript).toHaveBeenCalledTimes(1);
-      expect(mockExistsScript).toHaveBeenCalledWith("existing-form", `https://figform.com/f/${props.id}`);
+      expect(mockExistsScript).toHaveBeenCalledWith("existing-form", `https://figform.io/f/${props.id}`);
       expect(mockCreateScript).not.toHaveBeenCalled();
     });
 
     it("should create script with custom baseUrl", () => {
       const mockParent = document.createElement("div");
       const resolvedOptions = {
-        baseUrl: "https://custom.figform.com",
+        baseUrl: "https://custom.figform.io",
         parent: mockParent,
       };
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -132,7 +132,7 @@ describe("react.tsx", () => {
 
       const props: FigFormProps = {
         id: "custom-form",
-        baseUrl: "https://custom.figform.com",
+        baseUrl: "https://custom.figform.io",
       };
 
       render(<FigForm {...props} />);
@@ -146,7 +146,7 @@ describe("react.tsx", () => {
     it("should call unmountScript on component unmount", () => {
       const mockParent = document.createElement("div");
       const resolvedOptions = {
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: mockParent,
       };
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -160,7 +160,7 @@ describe("react.tsx", () => {
       unmount();
 
       expect(mockUnmountScript).toHaveBeenCalledTimes(1);
-      expect(mockUnmountScript).toHaveBeenCalledWith(`https://figform.com/f/${props.id}`);
+      expect(mockUnmountScript).toHaveBeenCalledWith(`https://figform.io/f/${props.id}`);
     });
 
     it("should call unmountScript with custom baseUrl on component unmount", () => {
@@ -188,11 +188,11 @@ describe("react.tsx", () => {
       const mockParent1 = document.createElement("div");
       const mockParent2 = document.createElement("div");
       const resolvedOptions1 = {
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: mockParent1,
       };
       const resolvedOptions2 = {
-        baseUrl: "https://custom.figform.com",
+        baseUrl: "https://custom.figform.io",
         parent: mockParent2,
       };
       mockResolveOptions.mockReturnValueOnce(resolvedOptions1).mockReturnValueOnce(resolvedOptions2);
@@ -208,7 +208,7 @@ describe("react.tsx", () => {
 
       const props2: FigFormProps = {
         id: "change-test",
-        baseUrl: "https://custom.figform.com",
+        baseUrl: "https://custom.figform.io",
       };
 
       rerender(<ParentComponent formProps={props2} />);
@@ -221,7 +221,7 @@ describe("react.tsx", () => {
     it("should handle all FigFormOptions properties", () => {
       const mockParent = document.createElement("div");
       const resolvedOptions = {
-        baseUrl: "https://custom.figform.com",
+        baseUrl: "https://custom.figform.io",
         parent: mockParent,
       };
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -230,7 +230,7 @@ describe("react.tsx", () => {
       const customParentElement = document.createElement("section");
       const props: FigFormProps = {
         id: "full-options-test",
-        baseUrl: "https://custom.figform.com",
+        baseUrl: "https://custom.figform.io",
         parent: customParentElement,
         parentId: "should-be-ignored-when-parent-provided",
       };
@@ -255,7 +255,7 @@ describe("react.tsx", () => {
     it("should handle parentId option", () => {
       const mockParent = document.createElement("div");
       const resolvedOptions = {
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: mockParent,
       };
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -271,13 +271,13 @@ describe("react.tsx", () => {
       expect(mockResolveOptions).toHaveBeenCalledTimes(1);
       expect(mockResolveOptions).toHaveBeenCalledWith({ parentId: props.parentId }, expect.any(HTMLElement));
       expect(mockCreateScript).toHaveBeenCalledTimes(1);
-      expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.com/f/${props.id}`, mockParent);
+      expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.io/f/${props.id}`, mockParent);
     });
 
     it("should handle parent element option", () => {
       const customParent = document.createElement("div");
       const resolvedOptions = {
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: customParent,
       };
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -293,13 +293,13 @@ describe("react.tsx", () => {
       expect(mockResolveOptions).toHaveBeenCalledTimes(1);
       expect(mockResolveOptions).toHaveBeenCalledWith({ parent: customParent }, expect.any(HTMLElement));
       expect(mockCreateScript).toHaveBeenCalledTimes(1);
-      expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.com/f/${props.id}`, customParent);
+      expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.io/f/${props.id}`, customParent);
     });
 
     it("should handle changes to id prop", () => {
       const mockParent = document.createElement("div");
       mockResolveOptions.mockReturnValue({
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: mockParent,
       });
       mockExistsScript.mockReturnValue(false);
@@ -308,11 +308,11 @@ describe("react.tsx", () => {
 
       const { rerender } = render(<TestComponent id="initial-id" />);
 
-      expect(mockExistsScript).toHaveBeenCalledWith("initial-id", "https://figform.com/f/initial-id");
+      expect(mockExistsScript).toHaveBeenCalledWith("initial-id", "https://figform.io/f/initial-id");
 
       rerender(<TestComponent id="changed-id" />);
 
-      expect(mockExistsScript).toHaveBeenCalledWith("changed-id", "https://figform.com/f/changed-id");
+      expect(mockExistsScript).toHaveBeenCalledWith("changed-id", "https://figform.io/f/changed-id");
       expect(mockExistsScript).toHaveBeenCalledTimes(2);
     });
 

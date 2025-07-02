@@ -24,7 +24,7 @@ describe("options", () => {
       const result = resolveOptions(undefined);
 
       expect(result).toEqual({
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: mockDocumentBody,
       });
     });
@@ -45,7 +45,7 @@ describe("options", () => {
       const result = resolveOptions({ parent: customParent });
 
       expect(result).toEqual({
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: customParent,
       });
     });
@@ -58,7 +58,7 @@ describe("options", () => {
       const result = resolveOptions(options);
 
       expect(result).toEqual({
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: customParent,
       });
       expect(mockGetElementById).toHaveBeenCalledTimes(1);
@@ -70,7 +70,7 @@ describe("options", () => {
       const result = resolveOptions(undefined, fallbackParent);
 
       expect(result).toEqual({
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: fallbackParent,
       });
       expect(mockGetElementById).not.toHaveBeenCalled();
@@ -86,7 +86,7 @@ describe("options", () => {
       const result = resolveOptions(options);
 
       expect(result).toEqual({
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: options.parent,
       });
       expect(mockGetElementById).not.toHaveBeenCalled();

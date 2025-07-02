@@ -19,7 +19,7 @@ describe("index", () => {
       const options = { parentId: "test-parent" };
       const mockParent = {} as HTMLElement;
       mockResolveOptions.mockReturnValueOnce({
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: mockParent,
       });
 
@@ -28,7 +28,7 @@ describe("index", () => {
       expect(mockResolveOptions).toHaveBeenCalledTimes(1);
       expect(mockResolveOptions).toHaveBeenCalledWith(options);
       expect(mockCreateScript).toHaveBeenCalledTimes(1);
-      expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.com/f/${id}`, mockParent);
+      expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.io/f/${id}`, mockParent);
     });
 
     it("should resolve options and create script with custom baseUrl", () => {
@@ -53,7 +53,7 @@ describe("index", () => {
       const options = {};
       const mockParent = {} as HTMLElement;
       mockResolveOptions.mockReturnValueOnce({
-        baseUrl: "https://figform.com",
+        baseUrl: "https://figform.io",
         parent: mockParent,
       });
 
@@ -62,7 +62,7 @@ describe("index", () => {
       expect(mockResolveOptions).toHaveBeenCalledTimes(1);
       expect(mockResolveOptions).toHaveBeenCalledWith(options);
       expect(mockCreateScript).toHaveBeenCalledTimes(1);
-      expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.com/f/${id}`, mockParent);
+      expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.io/f/${id}`, mockParent);
     });
   });
 });

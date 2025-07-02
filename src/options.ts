@@ -32,7 +32,7 @@ export function resolveOptions(
   fallback: HTMLElement | null = null,
 ): ResolvedFormOptions {
   return {
-    baseUrl: options?.baseUrl ?? "https://figform.com",
+    baseUrl: options?.baseUrl ?? "https://figform.io",
     parent: resolveParent(options, fallback),
   };
 }
