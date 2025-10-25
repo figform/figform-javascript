@@ -2,12 +2,13 @@ import * as React from "react";
 import { FigFormOptions, resolveOptions } from "./options";
 import { useShallowMemo } from "./react-hooks";
 import { createScript, existsScript, unmountScript } from "./script";
+import { buildUrl } from "./utils";
 
 export type { FigFormOptions };
 
-export interface FigFormProps extends FigFormOptions {
+export type FigFormProps = FigFormOptions & {
   id: string;
-}
+};
 
 /**
  * FigForm React component that dynamically loads and manages a form script.
@@ -34,7 +35,7 @@ export function FigForm({ id, ...options }: Readonly<FigFormProps>): React.React
 
   React.useEffect(() => {
     const resolvedOptions = resolveOptions(memoizedOptions, parentRef.current);
-    const url = `${resolvedOptions.baseUrl}/f/${id}`;
+    const url = buildUrl(resolvedOptions.baseUrl, id, resolvedOptions);
 
     if (!existsScript(id, url, resolvedOptions.parent)) {
       createScript(url, resolvedOptions.parent);

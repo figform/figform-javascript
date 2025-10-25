@@ -23,6 +23,7 @@ describe("react.tsx", () => {
     mockResolveOptions.mockImplementation((options, fallback) => ({
       baseUrl: options?.baseUrl ?? "https://figform.io",
       parent: fallback ?? document.createElement("div"),
+      preview: false,
     }));
 
     mockCreateScript.mockImplementation(() => document.createElement("script"));
@@ -61,6 +62,7 @@ describe("react.tsx", () => {
       mockResolveOptions.mockReturnValueOnce({
         baseUrl: "https://custom.example.com",
         parent: mockParent,
+        preview: false,
       });
 
       render(<FigForm {...props} />);
@@ -85,6 +87,7 @@ describe("react.tsx", () => {
       const resolvedOptions = {
         baseUrl: "https://figform.io",
         parent: mockParent,
+        preview: false,
       };
 
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -107,6 +110,7 @@ describe("react.tsx", () => {
       const resolvedOptions = {
         baseUrl: "https://figform.io",
         parent: mockParent,
+        preview: false,
       };
 
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -128,6 +132,7 @@ describe("react.tsx", () => {
       const resolvedOptions = {
         baseUrl: "https://custom.figform.io",
         parent: mockParent,
+        preview: false,
       };
 
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -152,6 +157,7 @@ describe("react.tsx", () => {
       const resolvedOptions = {
         baseUrl: "https://figform.io",
         parent: mockParent,
+        preview: false,
       };
 
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -179,6 +185,7 @@ describe("react.tsx", () => {
       const resolvedOptions = {
         baseUrl: "https://custom.example.com",
         parent: mockParent,
+        preview: false,
       };
 
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -202,10 +209,12 @@ describe("react.tsx", () => {
       const resolvedOptions1 = {
         baseUrl: "https://figform.io",
         parent: mockParent1,
+        preview: false,
       };
       const resolvedOptions2 = {
         baseUrl: "https://custom.figform.io",
         parent: mockParent2,
+        preview: false,
       };
 
       mockResolveOptions.mockReturnValueOnce(resolvedOptions1);
@@ -237,6 +246,7 @@ describe("react.tsx", () => {
       const resolvedOptions = {
         baseUrl: "https://custom.figform.io",
         parent: mockParent,
+        preview: false,
       };
 
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -272,6 +282,7 @@ describe("react.tsx", () => {
       const resolvedOptions = {
         baseUrl: "https://figform.io",
         parent: mockParent,
+        preview: false,
       };
 
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -295,6 +306,7 @@ describe("react.tsx", () => {
       const resolvedOptions = {
         baseUrl: "https://figform.io",
         parent: customParent,
+        preview: false,
       };
 
       mockResolveOptions.mockReturnValueOnce(resolvedOptions);
@@ -313,11 +325,37 @@ describe("react.tsx", () => {
       expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.io/f/${props.id}`, customParent);
     });
 
+    it("should handle preview option", () => {
+      const mockParent = document.createElement("div");
+      const resolvedOptions = {
+        baseUrl: "https://figform.io",
+        parent: mockParent,
+        preview: true,
+      };
+
+      mockResolveOptions.mockReturnValueOnce(resolvedOptions);
+      mockExistsScript.mockReturnValueOnce(false);
+
+      const props: FigFormProps = {
+        id: "parent-id-test",
+        preview: true,
+      };
+
+      render(<FigForm {...props} />);
+
+      expect(mockResolveOptions).toHaveBeenCalledTimes(1);
+      expect(mockResolveOptions).toHaveBeenCalledWith({ preview: true }, expect.any(HTMLElement));
+      expect(mockCreateScript).toHaveBeenCalledTimes(1);
+      expect(mockCreateScript).toHaveBeenCalledWith(`https://figform.io/f/${props.id}?preview=true`, mockParent);
+    });
+
     it("should handle changes to id prop", () => {
       const mockParent = document.createElement("div");
+
       mockResolveOptions.mockReturnValue({
         baseUrl: "https://figform.io",
         parent: mockParent,
+        preview: false,
       });
       mockExistsScript.mockReturnValue(false);
 

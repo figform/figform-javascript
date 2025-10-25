@@ -26,6 +26,7 @@ describe("options", () => {
       expect(result).toEqual({
         baseUrl: "https://figform.io",
         parent: mockDocumentBody,
+        preview: false,
       });
     });
 
@@ -37,6 +38,7 @@ describe("options", () => {
       expect(result).toEqual({
         baseUrl: "https://custom.example.com",
         parent: mockDocumentBody,
+        preview: false,
       });
     });
 
@@ -47,6 +49,17 @@ describe("options", () => {
       expect(result).toEqual({
         baseUrl: "https://figform.io",
         parent: customParent,
+        preview: false,
+      });
+    });
+
+    it("should return custom preview when provided", () => {
+      const result = resolveOptions({ preview: true });
+
+      expect(result).toEqual({
+        baseUrl: "https://figform.io",
+        parent: mockDocumentBody,
+        preview: true,
       });
     });
 
@@ -60,6 +73,7 @@ describe("options", () => {
       expect(result).toEqual({
         baseUrl: "https://figform.io",
         parent: customParent,
+        preview: false,
       });
       expect(mockGetElementById).toHaveBeenCalledTimes(1);
       expect(mockGetElementById).toHaveBeenCalledWith(options.parentId);
@@ -72,6 +86,7 @@ describe("options", () => {
       expect(result).toEqual({
         baseUrl: "https://figform.io",
         parent: fallbackParent,
+        preview: false,
       });
       expect(mockGetElementById).not.toHaveBeenCalled();
     });
@@ -88,6 +103,7 @@ describe("options", () => {
       expect(result).toEqual({
         baseUrl: "https://figform.io",
         parent: options.parent,
+        preview: false,
       });
       expect(mockGetElementById).not.toHaveBeenCalled();
     });

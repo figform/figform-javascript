@@ -2,11 +2,13 @@ export interface FigFormOptions {
   baseUrl?: string;
   parent?: HTMLElement;
   parentId?: string;
+  preview?: boolean;
 }
 
 interface ResolvedFormOptions {
   baseUrl: string;
   parent: HTMLElement;
+  preview: boolean;
 }
 
 function resolveParent(options: FigFormOptions | undefined, fallback: HTMLElement | null): HTMLElement {
@@ -34,5 +36,6 @@ export function resolveOptions(
   return {
     baseUrl: options?.baseUrl ?? "https://figform.io",
     parent: resolveParent(options, fallback),
+    preview: options?.preview ?? false,
   };
 }
