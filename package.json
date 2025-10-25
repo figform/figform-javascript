@@ -94,6 +94,7 @@
     "format": "eslint . --fix",
     "lint": "eslint .",
     "prepare": "husky",
+    "prepublishOnly": "npm run build",
     "test": "jest --coverage"
   }
 }
