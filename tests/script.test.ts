@@ -33,6 +33,7 @@ describe("script", () => {
     it("should create a script element and append it to parent", () => {
       const mockScript = { src: "" } as unknown as HTMLScriptElement;
       const src = "https://example.com/script.js";
+
       mockDocumentCreateElement.mockReturnValueOnce(mockScript);
 
       const result = createScript(src, { appendChild: mockElementAppendChild } as unknown as HTMLElement);
@@ -49,9 +50,14 @@ describe("script", () => {
     it("should return true when script with src exists", () => {
       const id = "test-form";
       const mockScript = { src: "https://example.com/script.js" } as unknown as HTMLScriptElement;
-      mockQuerySelector.mockReturnValueOnce(mockScript).mockReturnValueOnce(null);
+      const mockParent = {
+        querySelector: mockQuerySelector,
+      } as unknown as HTMLElement;
 
-      const result = existsScript(id, mockScript.src);
+      mockQuerySelector.mockReturnValueOnce(mockScript);
+      mockQuerySelector.mockReturnValueOnce(null);
+
+      const result = existsScript(id, mockScript.src, mockParent);
 
       expect(result).toBe(true);
       expect(mockQuerySelector).toHaveBeenCalledTimes(1);
@@ -61,9 +67,14 @@ describe("script", () => {
     it("should return true when div with figform class exists", () => {
       const id = "test-form";
       const mockScript = { src: "https://example.com/script.js" };
-      mockQuerySelector.mockReturnValueOnce(null).mockReturnValueOnce({} as HTMLElement);
+      const mockParent = {
+        querySelector: mockQuerySelector,
+      } as unknown as HTMLElement;
 
-      const result = existsScript(id, mockScript.src);
+      mockQuerySelector.mockReturnValueOnce(null);
+      mockQuerySelector.mockReturnValueOnce({} as HTMLElement);
+
+      const result = existsScript(id, mockScript.src, mockParent);
 
       expect(result).toBe(true);
       expect(mockQuerySelector).toHaveBeenCalledTimes(2);
@@ -74,9 +85,14 @@ describe("script", () => {
     it("should return false when neither script nor div exists", () => {
       const id = "test-form";
       const mockScript = { src: "https://example.com/script.js" };
-      mockQuerySelector.mockReturnValueOnce(null).mockReturnValueOnce(null);
+      const mockParent = {
+        querySelector: mockQuerySelector,
+      } as unknown as HTMLElement;
 
-      const result = existsScript(id, mockScript.src);
+      mockQuerySelector.mockReturnValueOnce(null);
+      mockQuerySelector.mockReturnValueOnce(null);
+
+      const result = existsScript(id, mockScript.src, mockParent);
 
       expect(result).toBe(false);
       expect(mockQuerySelector).toHaveBeenCalledTimes(2);

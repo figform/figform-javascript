@@ -9,12 +9,12 @@ export function createScript(src: string, parent: HTMLElement): HTMLScriptElemen
   return script;
 }
 
-export function existsScript(id: string, src: string): boolean {
+export function existsScript(id: string, src: string, parent: HTMLElement): boolean {
   const className = getClassName(id);
 
   return (
-    document.querySelector(`script[src="${src}"]`) !== null ||
-    document.querySelector(`div[class*="${className}"][class^="${className}"]`) !== null
+    parent.querySelector(`script[src="${src}"]`) !== null ||
+    parent.querySelector(`div[class*="${className}"][class^="${className}"]`) !== null
   );
 }
 

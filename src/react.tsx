@@ -36,7 +36,7 @@ export function FigForm({ id, ...options }: Readonly<FigFormProps>): React.React
     const resolvedOptions = resolveOptions(memoizedOptions, parentRef.current);
     const url = `${resolvedOptions.baseUrl}/f/${id}`;
 
-    if (!existsScript(id, url)) {
+    if (!existsScript(id, url, resolvedOptions.parent)) {
       createScript(url, resolvedOptions.parent);
     }
 

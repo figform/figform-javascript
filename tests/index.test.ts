@@ -18,6 +18,7 @@ describe("index", () => {
       const id = "test-form-id";
       const options = { parentId: "test-parent" };
       const mockParent = {} as HTMLElement;
+
       mockResolveOptions.mockReturnValueOnce({
         baseUrl: "https://figform.io",
         parent: mockParent,
@@ -35,6 +36,7 @@ describe("index", () => {
       const id = "custom-form-id";
       const options = { baseUrl: "https://custom.example.com" };
       const mockParent = {} as HTMLElement;
+
       mockResolveOptions.mockReturnValueOnce({
         baseUrl: "https://custom.example.com",
         parent: mockParent,
@@ -52,6 +54,7 @@ describe("index", () => {
       const id = "empty-options-form";
       const options = {};
       const mockParent = {} as HTMLElement;
+
       mockResolveOptions.mockReturnValueOnce({
         baseUrl: "https://figform.io",
         parent: mockParent,
