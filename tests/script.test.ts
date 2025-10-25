@@ -8,7 +8,10 @@ const mockElementAppendChild = jest.fn<
   ReturnType<HTMLElement["appendChild"]>,
   Parameters<HTMLElement["appendChild"]>
 >();
-const mockElementRemove = jest.fn<ReturnType<HTMLElement["remove"]>, Parameters<HTMLElement["remove"]>>();
+const mockElementRemoveChild = jest.fn<
+  ReturnType<HTMLElement["removeChild"]>,
+  Parameters<HTMLElement["removeChild"]>
+>();
 const mockQuerySelector = jest.fn<ReturnType<Document["querySelector"]>, Parameters<Document["querySelector"]>>();
 
 Object.defineProperty(document, "createElement", {
@@ -65,7 +68,7 @@ describe("script", () => {
       expect(result).toBe(true);
       expect(mockQuerySelector).toHaveBeenCalledTimes(2);
       expect(mockQuerySelector).toHaveBeenNthCalledWith(1, `script[src="${mockScript.src}"]`);
-      expect(mockQuerySelector).toHaveBeenNthCalledWith(2, `div[class*="figform_${id}_"][class^="figform_${id}_"]`);
+      expect(mockQuerySelector).toHaveBeenNthCalledWith(2, `div[class*="figform_${id}-"][class^="figform_${id}-"]`);
     });
 
     it("should return false when neither script nor div exists", () => {
@@ -78,31 +81,71 @@ describe("script", () => {
       expect(result).toBe(false);
       expect(mockQuerySelector).toHaveBeenCalledTimes(2);
       expect(mockQuerySelector).toHaveBeenNthCalledWith(1, `script[src="${mockScript.src}"]`);
-      expect(mockQuerySelector).toHaveBeenNthCalledWith(2, `div[class*="figform_${id}_"][class^="figform_${id}_"]`);
+      expect(mockQuerySelector).toHaveBeenNthCalledWith(2, `div[class*="figform_${id}-"][class^="figform_${id}-"]`);
     });
   });
 
   describe("unmountScript", () => {
     it("should remove script element when it exists", () => {
+      const mockScriptId = "test-form";
       const mockScript = { src: "https://example.com/script.js" };
-      mockQuerySelector.mockReturnValueOnce({ remove: mockElementRemove } as unknown as HTMLElement);
+      const mockParent = {
+        querySelector: mockQuerySelector,
+        removeChild: mockElementRemoveChild,
+      } as unknown as HTMLElement;
 
-      unmountScript(mockScript.src);
+      mockQuerySelector.mockReturnValueOnce({} as unknown as HTMLElement);
 
-      expect(mockQuerySelector).toHaveBeenCalledTimes(1);
+      unmountScript(mockScriptId, mockScript.src, mockParent);
+
+      expect(mockQuerySelector).toHaveBeenCalledTimes(2);
       expect(mockQuerySelector).toHaveBeenCalledWith(`script[src="${mockScript.src}"]`);
-      expect(mockElementRemove).toHaveBeenCalledTimes(1);
+      expect(mockQuerySelector).toHaveBeenCalledWith(
+        `div[class*="figform_${mockScriptId}-"][class^="figform_${mockScriptId}-"]`,
+      );
+      expect(mockElementRemoveChild).toHaveBeenCalledTimes(2);
     });
 
-    it("should not remove anything when script does not exist", () => {
+    it("should not remove script when script does not exist", () => {
+      const mockScriptId = "test-form";
       const mockScript = { src: "https://example.com/script.js" };
+      const mockParent = {
+        querySelector: mockQuerySelector,
+        removeChild: mockElementRemoveChild,
+      } as unknown as HTMLElement;
+
+      mockQuerySelector.mockReturnValueOnce(null);
+      mockQuerySelector.mockReturnValueOnce({} as unknown as HTMLElement);
+
+      unmountScript(mockScriptId, mockScript.src, mockParent);
+
+      expect(mockQuerySelector).toHaveBeenCalledTimes(2);
+      expect(mockQuerySelector).toHaveBeenCalledWith(`script[src="${mockScript.src}"]`);
+      expect(mockQuerySelector).toHaveBeenCalledWith(
+        `div[class*="figform_${mockScriptId}-"][class^="figform_${mockScriptId}-"]`,
+      );
+      expect(mockElementRemoveChild).toHaveBeenCalledTimes(1);
+    });
+
+    it("should not remove form when form does not exist", () => {
+      const mockScriptId = "test-form";
+      const mockScript = { src: "https://example.com/script.js" };
+      const mockParent = {
+        querySelector: mockQuerySelector,
+        removeChild: mockElementRemoveChild,
+      } as unknown as HTMLElement;
+
+      mockQuerySelector.mockReturnValueOnce({} as unknown as HTMLElement);
       mockQuerySelector.mockReturnValueOnce(null);
 
-      unmountScript(mockScript.src);
+      unmountScript(mockScriptId, mockScript.src, mockParent);
 
-      expect(mockQuerySelector).toHaveBeenCalledTimes(1);
+      expect(mockQuerySelector).toHaveBeenCalledTimes(2);
       expect(mockQuerySelector).toHaveBeenCalledWith(`script[src="${mockScript.src}"]`);
-      expect(mockElementRemove).not.toHaveBeenCalled();
+      expect(mockQuerySelector).toHaveBeenCalledWith(
+        `div[class*="figform_${mockScriptId}-"][class^="figform_${mockScriptId}-"]`,
+      );
+      expect(mockElementRemoveChild).toHaveBeenCalledTimes(1);
     });
   });
 });

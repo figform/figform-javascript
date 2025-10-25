@@ -1,14 +1,29 @@
 import * as React from "react";
 import { FigFormOptions, resolveOptions } from "./options";
+import { useShallowMemo } from "./react-hooks";
 import { createScript, existsScript, unmountScript } from "./script";
+
+export type { FigFormOptions };
 
 export interface FigFormProps extends FigFormOptions {
   id: string;
 }
 
+/**
+ * FigForm React component that dynamically loads and manages a form script.
+ *
+ * @param props - The component props
+ * @returns A hidden span element used as a mount reference
+ *
+ * @example
+ * ```tsx
+ * <FigForm id="FORM_ID" />
+ * ```
+ */
 export function FigForm({ id, ...options }: Readonly<FigFormProps>): React.ReactNode {
   const mountRef = React.useRef<HTMLSpanElement>(null);
   const parentRef = React.useRef<HTMLElement | null>(null);
+  const memoizedOptions = useShallowMemo(options);
 
   React.useLayoutEffect(() => {
     if (mountRef.current !== null && mountRef.current.parentElement !== null) {
@@ -18,7 +33,7 @@ export function FigForm({ id, ...options }: Readonly<FigFormProps>): React.React
   }, []);
 
   React.useEffect(() => {
-    const resolvedOptions = resolveOptions(options, parentRef.current);
+    const resolvedOptions = resolveOptions(memoizedOptions, parentRef.current);
     const url = `${resolvedOptions.baseUrl}/f/${id}`;
 
     if (!existsScript(id, url)) {
@@ -26,11 +41,9 @@ export function FigForm({ id, ...options }: Readonly<FigFormProps>): React.React
     }
 
     return () => {
-      unmountScript(url);
+      unmountScript(id, url, resolvedOptions.parent);
     };
-  }, [id, options]);
+  }, [id, memoizedOptions]);
 
-  return <span id={`figform-${id}`} ref={mountRef} style={{ display: "none" }} />;
+  return <span aria-hidden="true" id={`figform-${id}`} ref={mountRef} style={{ display: "none" }} />;
 }
-
-export type { FigFormOptions };

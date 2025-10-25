@@ -144,6 +144,7 @@ describe("react.tsx", () => {
     });
 
     it("should call unmountScript on component unmount", () => {
+      const mockFormId = "unmount-test";
       const mockParent = document.createElement("div");
       const resolvedOptions = {
         baseUrl: "https://figform.io",
@@ -153,17 +154,23 @@ describe("react.tsx", () => {
       mockExistsScript.mockReturnValueOnce(false);
 
       const props: FigFormProps = {
-        id: "unmount-test",
+        id: mockFormId,
       };
 
       const { unmount } = render(<FigForm {...props} />);
       unmount();
 
       expect(mockUnmountScript).toHaveBeenCalledTimes(1);
-      expect(mockUnmountScript).toHaveBeenCalledWith(`https://figform.io/f/${props.id}`);
+
+      expect(mockUnmountScript).toHaveBeenCalledWith(
+        mockFormId,
+        `${resolvedOptions.baseUrl}/f/${props.id}`,
+        mockParent,
+      );
     });
 
     it("should call unmountScript with custom baseUrl on component unmount", () => {
+      const mockFormId = "custom-unmount-test";
       const mockParent = document.createElement("div");
       const resolvedOptions = {
         baseUrl: "https://custom.example.com",
@@ -173,7 +180,7 @@ describe("react.tsx", () => {
       mockExistsScript.mockReturnValueOnce(false);
 
       const props: FigFormProps = {
-        id: "custom-unmount-test",
+        id: mockFormId,
         baseUrl: "https://custom.example.com",
       };
 
@@ -181,7 +188,7 @@ describe("react.tsx", () => {
       unmount();
 
       expect(mockUnmountScript).toHaveBeenCalledTimes(1);
-      expect(mockUnmountScript).toHaveBeenCalledWith(`${props.baseUrl}/f/${props.id}`);
+      expect(mockUnmountScript).toHaveBeenCalledWith(mockFormId, `${props.baseUrl}/f/${props.id}`, mockParent);
     });
 
     it("should handle prop changes by resolving options again", () => {
