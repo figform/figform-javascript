@@ -24,7 +24,7 @@ describe("options", () => {
       const result = resolveOptions(undefined);
 
       expect(result).toEqual({
-        baseUrl: "https://figform.io",
+        baseUrl: "https://figform.com",
         parent: mockDocumentBody,
         preview: false,
       });
@@ -47,7 +47,7 @@ describe("options", () => {
       const result = resolveOptions({ parent: customParent });
 
       expect(result).toEqual({
-        baseUrl: "https://figform.io",
+        baseUrl: "https://figform.com",
         parent: customParent,
         preview: false,
       });
@@ -57,7 +57,7 @@ describe("options", () => {
       const result = resolveOptions({ preview: true });
 
       expect(result).toEqual({
-        baseUrl: "https://figform.io",
+        baseUrl: "https://figform.com",
         parent: mockDocumentBody,
         preview: true,
       });
@@ -71,7 +71,7 @@ describe("options", () => {
       const result = resolveOptions(options);
 
       expect(result).toEqual({
-        baseUrl: "https://figform.io",
+        baseUrl: "https://figform.com",
         parent: customParent,
         preview: false,
       });
@@ -84,7 +84,7 @@ describe("options", () => {
       const result = resolveOptions(undefined, fallbackParent);
 
       expect(result).toEqual({
-        baseUrl: "https://figform.io",
+        baseUrl: "https://figform.com",
         parent: fallbackParent,
         preview: false,
       });
@@ -101,7 +101,7 @@ describe("options", () => {
       const result = resolveOptions(options);
 
       expect(result).toEqual({
-        baseUrl: "https://figform.io",
+        baseUrl: "https://figform.com",
         parent: options.parent,
         preview: false,
       });

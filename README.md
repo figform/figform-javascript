@@ -1,6 +1,6 @@
 # Official FigForm SDK for JavaScript
 
-[FigForm](https://figform.io) is a full-featured form builder with Figma-like editor, analytics, integrations, and developer-friendly SDKs for React and JS.
+[FigForm](https://figform.com) is a full-featured form builder with Figma-like editor, analytics, integrations, and developer-friendly SDKs for React and JS.
 
 ## Installation
 

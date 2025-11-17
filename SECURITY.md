@@ -12,7 +12,7 @@ We take security seriously and actively maintain security updates for the follow
 ## Reporting Security Vulnerabilities
 
 We appreciate your help in keeping our project secure. If you discover a security vulnerability, please report it
-responsibly by emailing us at support[@]figform.io.
+responsibly by emailing us at support[@]figform.com.
 
 ### What to Include in Your Report
 
